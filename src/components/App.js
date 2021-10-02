@@ -3,14 +3,73 @@ import '../index.css';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
+import {useState} from 'react';
+import {useEffect} from 'react';
+import PopupWithForm from './PopupWithForm';
+import ImagePopup from './ImagePopup';
+import {api} from '../utils/Api';
 
 function App() {
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
+  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+  const [userName, setUserName] = useState('');
+  const [userDescription, setUserDescription] = useState('');
+  const [userAvatar, setUserAvatar] = useState('');
+
+
+  const onEditProfile = () => {setIsEditProfilePopupOpen(true)};
+  const onAddPlace = () => {setIsAddPlacePopupOpen(true)};
+  const onEditAvatar = () => {setIsEditAvatarPopupOpen(true)};
+  const closeAllPopups = () => {
+    setIsEditProfilePopupOpen(false);
+    setIsAddPlacePopupOpen(false);
+    setIsEditAvatarPopupOpen(false);
+  };
+
+  useEffect(() => {
+    api.getUserInfo().then((res) => {
+      setUserName(res.name);
+      setUserDescription(res.about);
+      setUserAvatar(res.avatar);
+    })
+  }, [])
+
+
   return (
     <div className="root">
     <Header/>
-    <Main/>
+    <Main 
+        handleEditProfileClick={onEditProfile}
+        handleAddPlaceClick={onAddPlace}
+        handleEditAvatarClick={onEditAvatar}
+        userName={userName}
+        userDescription={userDescription}
+        userAvatar={userAvatar}/>
     <Footer/>
-    <section className="popup" id="popup-edit"> 
+    <PopupWithForm
+    title={'Редактировать профиль'}
+    name={'popup-edit'}
+    isOpen={isEditProfilePopupOpen}
+    onClose={closeAllPopups}/>
+    <PopupWithForm
+    title={'Новое место'}
+    name={'popup-add'}
+    isOpen={isAddPlacePopupOpen}
+    onClose={closeAllPopups}/>
+    <ImagePopup/>
+    {/* <PopupWithForm
+    title={'Вы уверены?'}
+    name={'popup-confirmation'}
+    isOpen={}
+    onClose={closeAllPopups}/> */}
+    <PopupWithForm
+    title={'Обновить аватар'}
+    name={'avatar-update'}
+    isOpen={isEditAvatarPopupOpen}
+    onClose={closeAllPopups}/>
+    
+    {/* <section className="popup" id="popup-edit"> 
         <div className="popup__container popup__container_type_input"> 
            <h2 className="popup__title">Редактировать профиль</h2>  
            <form className="popup__form" action='#' name="profile-edit-form" noValidate> 
@@ -62,7 +121,7 @@ function App() {
         </form>
         <button className="popup__exit-button" type="button" aria-label="закрыть попап"></button>
       </div>
-    </section>
+    </section> */}
     </div>
   );
 }

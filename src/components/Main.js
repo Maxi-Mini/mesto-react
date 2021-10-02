@@ -1,24 +1,14 @@
-function Main(){
-    const handleEditAvatarClick = () =>{
-        document.querySelector('#avatar-update').classList.add('popup_opened')
-    }
-
-    const handleEditProfileClick = () =>{
-        document.querySelector('#popup-edit').classList.add('popup_opened')
-    }
-
-    const handleAddPlaceClick = () =>{
-        document.querySelector('#popup-add').classList.add('popup_opened')
-    }
+function Main({handleEditAvatarClick, handleEditProfileClick, handleAddPlaceClick, userName, userDescription, userAvatar}){
+    
 
     return(
         <main className="content">
         <section className="profile">
-            <div className="profile__avatar" onClick={handleEditAvatarClick}></div>
+            <div className="profile__avatar" style={{ backgroundImage: `url(${userAvatar})` }} onClick={handleEditAvatarClick}></div>
             <div className="profile__bio">
                 <div className="profile__info">
-                    <h1 className="profile__name">Жак-Ив Кусто</h1>
-                    <p className="profile__caption">Исследователь океана</p>
+                    <h1 className="profile__name">{userName}</h1>
+                    <p className="profile__caption">{userDescription}</p>
                 </div>
             <button className="profile__edit-button" type="button" aria-label="кнопка редактирования профиля" onClick={handleEditProfileClick}></button>
             </div>
