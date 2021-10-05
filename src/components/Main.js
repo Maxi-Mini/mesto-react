@@ -1,3 +1,4 @@
+
 function Main({handleEditAvatarClick, handleEditProfileClick, handleAddPlaceClick, userName, userDescription, userAvatar}){
     
 

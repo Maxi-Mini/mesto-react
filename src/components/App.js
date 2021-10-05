@@ -1,13 +1,12 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import '../index.css';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
-import {useState} from 'react';
-import {useEffect} from 'react';
 import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
 import {api} from '../utils/Api';
+import Card from './Card';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -16,6 +15,8 @@ function App() {
   const [userName, setUserName] = useState('');
   const [userDescription, setUserDescription] = useState('');
   const [userAvatar, setUserAvatar] = useState('');
+  const [cards, setCards] = useState([]);
+  const [selectedCard, setSelectedCard] = useState({title:'', link:''});
 
 
   const onEditProfile = () => {setIsEditProfilePopupOpen(true)};
@@ -25,6 +26,10 @@ function App() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
+    setSelectedCard({title:'', link:''});
+  };
+  const handleCardClick = (card) => {
+    setSelectedCard(card)
   };
 
   useEffect(() => {
@@ -35,34 +40,63 @@ function App() {
     })
   }, [])
 
+  useEffect (() => {
+    api.getCards().then((res) => {
+      const arr = res.map((item) => {
+        return {
+          likes: item.likes.length,
+          title: item.name,
+          link: item.link,
+          id: item._id
+        }
+      })
+      setCards(arr);
+    })
+  }, [])
+
 
   return (
     <div className="root">
+
     <Header/>
+
     <Main 
         handleEditProfileClick={onEditProfile}
         handleAddPlaceClick={onAddPlace}
         handleEditAvatarClick={onEditAvatar}
         userName={userName}
         userDescription={userDescription}
-        userAvatar={userAvatar}/>
+        userAvatar={userAvatar}
+        handleCardClick={handleCardClick}/>
+
+    <section className="elements">
+    {cards.map((card) => { return <Card key={card.id} card={card} onCardClick={handleCardClick} />})}
+    </section>
+
     <Footer/>
+
     <PopupWithForm
     title={'Редактировать профиль'}
     name={'popup-edit'}
     isOpen={isEditProfilePopupOpen}
     onClose={closeAllPopups}/>
+
     <PopupWithForm
     title={'Новое место'}
     name={'popup-add'}
     isOpen={isAddPlacePopupOpen}
     onClose={closeAllPopups}/>
-    <ImagePopup/>
+
+    <ImagePopup
+    card={selectedCard}
+    onClose={closeAllPopups}/>
+
     {/* <PopupWithForm
     title={'Вы уверены?'}
     name={'popup-confirmation'}
     isOpen={}
     onClose={closeAllPopups}/> */}
+
     <PopupWithForm
     title={'Обновить аватар'}
     name={'avatar-update'}
