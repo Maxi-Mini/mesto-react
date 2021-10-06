@@ -1,8 +1,8 @@
-import header_logo from '../images/header_logo.svg'
+import headerLogo from '../images/header_logo.svg'
 function Header(){
     return(
         <header className="header">
-        <img className="header__logo" src={header_logo} alt="логотип место"/>
+        <img className="header__logo" src={headerLogo} alt="логотип место"/>
         </header>
     )
 }

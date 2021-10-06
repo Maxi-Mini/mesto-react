@@ -1,5 +1,41 @@
+import React, {useState, useEffect} from 'react';
+import Card from './Card';
+import {api} from '../utils/Api';
 
-function Main({handleEditAvatarClick, handleEditProfileClick, handleAddPlaceClick, userName, userDescription, userAvatar}){
+function Main({handleEditAvatarClick, handleEditProfileClick, handleAddPlaceClick, handleCardClick}){
+   
+  const [userName, setUserName] = useState('');
+  const [userDescription, setUserDescription] = useState('');
+  const [userAvatar, setUserAvatar] = useState('');
+  const [cards, setCards] = useState([]);
+
+  useEffect(() => {
+    api.getUserInfo().then((res) => {
+      setUserName(res.name);
+      setUserDescription(res.about);
+      setUserAvatar(res.avatar);
+    })
+    .catch((err) => {
+      console.error(err);
+    })
+  }, [])
+
+  useEffect (() => {
+    api.getCards().then((res) => {
+      const arr = res.map((item) => {
+        return {
+          likes: item.likes.length,
+          title: item.name,
+          link: item.link,
+          id: item._id
+        }
+      })
+      setCards(arr);
+    })
+    .catch((err) => {
+      console.error(err);
+    })
+  }, [])
     
 
     return(
@@ -15,7 +51,9 @@ function Main({handleEditAvatarClick, handleEditProfileClick, handleAddPlaceClic
             </div>
             <button className="profile__add-button" type="button" aria-label="кнопка добавления контента" onClick={handleAddPlaceClick}></button>
         </section>
-        <section className="elements"></section>
+        <section className="elements">
+             {cards.map((card) => { return (<Card key={card.id} card={card} onCardClick={handleCardClick} />)})}
+        </section>
         </main>
     )
 }
