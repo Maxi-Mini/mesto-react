@@ -104,6 +104,16 @@
     getAllInfo(){
         return Promise.all([this.getCards(), this.getUserInfo()])
     }
+// проверяем наличие лайка
+
+    changeLikeCardStatus(data, isLiked) {
+        console.log(data);
+        return fetch(`${this._url}/cards/likes/${data}`, {
+          method: `${isLiked ? 'DELETE' : 'PUT'}`,
+          headers: this._headers,
+        })
+          .then(this._getResponse);
+      }
 }
 
 export const api = new Api({
