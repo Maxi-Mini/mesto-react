@@ -22,9 +22,9 @@ function Card({card, onCardClick, onCardLike, onCardDelete}){
     return(
         <div className="element">
             <button className="button element__delete-button" onClick={handleDeleteClick} style={isOwn ? {display: "block"} : {display: "none"}} aria-label="Удалить" type="button"></button>
-            <img className="element__image" onClick={handleClick} src={card.link} alt={card.title}/>
+            <img className="element__image" onClick={handleClick} src={card.link} alt={card.name}/>
             <div className="element__info">
-                <h3 className="element__title">{card.title}</h3>
+                <h3 className="element__title">{card.name}</h3>
                 <div className="element__like">
                     <button className={isLiked ? "button element__like-button element__like-button_active" : "button element__like-button"} onClick={handleLikeClick} type="button" aria-label="кнопка лайк"></button>
                     <span className="element__like-counter">{card.likes.length}</span>
